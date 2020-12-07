@@ -1,17 +1,21 @@
 const express = require("express")
 const app = express()
-const cors = require('cors')
+const cors = require("cors")
+const dotenv = require("dotenv")
+dotenv.config()
 const router = express.Router();
 app.use(cors())
 const {
     Pool
 } = require('pg')
 const pool = new Pool({
-    host: 'localhost',
-    user: 'postgres',
-    password: 'test',
-    database: 'pokemon'
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
 })
+
+const port = process.env.PORT || 4242
 
 router.get("/", (req, res) => {
     res.send("Welcome to your api !");
@@ -33,7 +37,7 @@ router.get("/pokemons", (req, res) => {
 })
 
 router.get("/pokemons/:id", async (req, res) => {
-    const query = "SELECT * FROM pokeattaque AS pa JOIN attaque AS aa ON pa.numeroattaque = aa.id JOIN pokemon AS po ON po.numero = pa.numeropokemon WHERE po.numero ="+req.params.id
+    const query = "SELECT * FROM pokeattaque AS pa JOIN attaque AS aa ON pa.numeroattaque = aa.id JOIN pokemon AS po ON po.numero = pa.numeropokemon WHERE po.numero =" + req.params.id
     const result = await pool.query(query)
     const infoPokemon = result.rows
     infoPokemon.map((pokemon) => {
@@ -46,24 +50,24 @@ router.get("/pokemons/:id", async (req, res) => {
     res.send(infoPokemon)
 })
 
-router.post("/pokemons", async (req, res)=> {
+router.post("/pokemons", async (req, res) => {
     const select = "SELECT MAX(numero) FROM pokemon"
     const result2 = await pool.query(select)
-    const query = "INSERT INTO pokemon (nompokemon,numero) VALUES ('"+req.query.nom + "',"+(result2.rows[0].max+1)+")"
+    const query = "INSERT INTO pokemon (nompokemon,numero) VALUES ('" + req.query.nom + "'," + (result2.rows[0].max + 1) + ")"
     const result = await pool.query(query)
-    const query2 = "INSERT INTO pokeattaque (numeropokemon, niveau, numeroattaque) VALUES ("+(result2.rows[0].max +1)+",'Depart',1)"
+    const query2 = "INSERT INTO pokeattaque (numeropokemon, niveau, numeroattaque) VALUES (" + (result2.rows[0].max + 1) + ",'Depart',1)"
     const result3 = await pool.query(query2)
     res.send("Pokémon ajouté !")
 })
 
-router.delete("/pokemons/:id", async(req, res) => {
-    const select = "DELETE FROM pokemon WHERE numero="+req.params.id
+router.delete("/pokemons/:id", async (req, res) => {
+    const select = "DELETE FROM pokemon WHERE numero=" + req.params.id
     const result = await pool.query(select)
     res.send("Pokémon supprimé !")
 })
 
 app.use(router)
 
-app.listen(4242, () => {
-    console.log("Server is listening on port 4242")
+app.listen(port, () => {
+    console.log("Server is listening on port", port)
 })

@@ -1,22 +1,24 @@
-const fs = require('fs')
-const knex = require('knex')({
-    client: 'pg',
+// faire npm run seed pour stocker les données
+const fs = require("fs")
+const dotenv = require("dotenv")
+dotenv.config()
+const knex = require("knex")({
+    client: "pg",
     connection: {
-        host: 'localhost',
-        user: 'postgres',
-        password: 'test',
-        database: 'pokemon'
+        host: process.env.HOST,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DATABASE
     }
 });
 
-
 knex.schema.createTable('attaque', (table) => {
-    table.increments('id').primary();
-    table.string('nom');
-    table.string('puissance');
-    table.string('precision');
-    table.integer('pp');
-})
+        table.increments('id').primary();
+        table.string('nom');
+        table.string('puissance');
+        table.string('precision');
+        table.integer('pp');
+    })
     .createTable('pokemon', (table) => {
         table.integer('numero').primary();
         table.string('nompokemon');
@@ -28,13 +30,13 @@ knex.schema.createTable('attaque', (table) => {
         table.float('forme');
         table.string("nomen");
     }).createTable('pokeattaque', (table) => {
-    table.increments('id').primary();
-    table.integer('numeropokemon')
-        .references('numero').inTable('pokemon').notNull().onDelete('cascade')
-    table.string('niveau');
-    table.integer('numeroattaque')
-        .references('id').inTable('attaque').notNull().onDelete('cascade')
-})
+        table.increments('id').primary();
+        table.integer('numeropokemon')
+            .references('numero').inTable('pokemon').notNull().onDelete('cascade')
+        table.string('niveau');
+        table.integer('numeroattaque')
+            .references('id').inTable('attaque').notNull().onDelete('cascade')
+    })
     .then(() => {
         try {
             const data = fs.readFileSync('./data/pokedex.json', 'utf8')
@@ -65,7 +67,7 @@ knex.schema.createTable('attaque', (table) => {
                     attaques = uniqueArray(attaques)
 
                     for (let i = 1;
-                         (i < (attaques.length + 1)) && flag; i++) {
+                        (i < (attaques.length + 1)) && flag; i++) {
                         if (attaques[i - 1].nom === valueAttaque.nom) {
                             tmp = i
                             flag = false
@@ -92,7 +94,7 @@ knex.schema.createTable('attaque', (table) => {
                         .then(function () {
                             return knex('pokeattaque')
                                 .insert(pokemonattaque).then(() => console.log("data attaques poke inserted"))
-                        });                                                                                    
+                        });
                 });
 
         } catch (err) {
