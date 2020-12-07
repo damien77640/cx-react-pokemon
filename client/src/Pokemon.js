@@ -2,11 +2,14 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import logo from "./logo.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const Pokemon = () => {
     const [pokemons, setPokemons] = useState([])
     const [searchTerm, setSearchTerm] = useState("")
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState([])
+    const [addTerm, setAddTerm] = useState("")
 
     useEffect(() => {
         axios
@@ -27,6 +30,15 @@ const Pokemon = () => {
         setSearchResults(results);
       }, [searchTerm]);
 
+      const addPokemon = () => {
+        axios
+        .post("http://localhost:4242/pokemons?nom="+addTerm)
+            window.location = "/"
+      }
+
+      const handleAdd = (e) => {
+        setAddTerm(e.target.value)
+      };
     return (
         <>
         <div className="row justify-content-center bg-dark" style={{minHeight: "100vh"}}>
@@ -37,6 +49,12 @@ const Pokemon = () => {
             </div>
             <div className="justify-content-center row mb-4">
             <input type="text" className="form-control" placeholder="Search Pokemon" value={searchTerm} onChange={handleChange}/>
+            </div>
+            <div className="justify-content-center row mb-4">
+            <input type="text" placeholder="Add Pokemon" value={addTerm} onChange={handleAdd}/>
+            <button className="btn btn-warning navbar-brand" onClick={addPokemon}>
+                <FontAwesomeIcon icon={faPlus} />
+                </button>
             </div>
             {searchTerm !== '' ? 
             <div className="row justify-content-center">

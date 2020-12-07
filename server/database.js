@@ -1,7 +1,5 @@
-// faire npm run seed pour stocker les données
 const fs = require("fs")
-const dotenv = require("dotenv")
-dotenv.config()
+const dotenv = require("dotenv").config({path:__dirname+'/../.env'})
 const knex = require("knex")({
     client: "pg",
     connection: {

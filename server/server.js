@@ -1,8 +1,7 @@
 const express = require("express")
 const app = express()
 const cors = require("cors")
-const dotenv = require("dotenv")
-dotenv.config()
+const dotenv = require("dotenv").config({path:__dirname+'/../.env'})
 const router = express.Router();
 app.use(cors())
 const {
@@ -15,7 +14,7 @@ const pool = new Pool({
     database: process.env.DATABASE
 })
 
-const port = process.env.PORT || 4242
+const port = process.env.PORT || 5000
 
 router.get("/", (req, res) => {
     res.send("Welcome to your api !");

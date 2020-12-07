@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
 const PokemonAttaque = ({match}) => {
@@ -14,18 +14,27 @@ const PokemonAttaque = ({match}) => {
                 setPokemons(response.data)
             })
     }, [])
-
+        const deletePokemon = () => {
+            axios
+            .delete("http://localhost:4242/pokemons/"+pokemons[0].numeropokemon)
+            .then(response => {
+                window.location = "/"
+            })
+        }
     return (
         <div className="bg-dark text-white" style={{minHeight: "100vh"}}>
             <nav className="navbar navbar-dark bg-dark">
                 <Link className="btn btn-danger navbar-brand" to={"/pokemons"}>
                 <FontAwesomeIcon icon={faArrowLeft} />
                 </Link>
+                <button className="btn btn-warning navbar-brand" onClick={deletePokemon}>
+                <FontAwesomeIcon icon={faTrash} />
+                </button>
             </nav>
         <div className="justify-content-center row mb-4">
             <h1 className="my-auto mr-5">#{pokemons[0]?.numeropokemon} {pokemons[0]?.nompokemon}</h1>
             {pokemons[0]?.nomen ? 
-            <img src={`https://www.pkparaiso.com//imagenes/pokedex/../xy/sprites/animados/${pokemons[0]?.nomen.toLowerCase()}.gif`}></img>
+            <img src={`https://www.pkparaiso.com//imagenes/pokedex/../xy/sprites/animados/${pokemons[0]?.nomen.toLowerCase().replace("’","").replace(".","._")}.gif`}></img>
             : 
             <img src={`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokemons[0]?.numeropokemon}.png`}></img>}
              </div>
