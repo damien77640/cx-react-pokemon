@@ -58,7 +58,7 @@ DATABASE=""
 URL : 
 ```url
 GET /pokemons
-``` 
+```
 
 
 Return :
@@ -85,7 +85,7 @@ Return :
 URL :
 ```url
 GET /pokemons/:id
-``` 
+```
 
 Return :
 ```json
@@ -137,7 +137,7 @@ Return :
 URL :
 ```url
 POST /pokemons/
-``` 
+```
 
 | Argument        | Type           | Valeur par défaut  |
 | ------------- |-------------| ----|
@@ -148,7 +148,7 @@ POST /pokemons/
 URL :
 ```url
 DELETE /pokemons/:id
-``` 
+```
 
 | Argument        | Type           | Valeur par défaut  |
 | ------------- |-------------| ----|
